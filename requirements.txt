@@ -6,4 +6,4 @@ dnspython
 tgcrypto==1.2.2
 asyncio
 python-dotenv
-python-telegram-bot=20.0
+python-telegram-bot==20.0

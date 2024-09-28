@@ -9,7 +9,7 @@ def auto_reaction(update, context):
 
 def main():
     # Replace 'YOUR_BOT_TOKEN' with your actual Telegram bot token
-    updater = Updater('YOUR_BOT_TOKEN', use_context=True)
+    updater = Updater('7242058454:AAHd0UU2_-cKAc2FhDut0HS4ROcN8mLeF1E', use_context=True)
     dp = updater.dispatcher
 
     # Listen for all messages and react

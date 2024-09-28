@@ -1,4 +1,4 @@
-from telegram.ext import Updater, MessageHandler, Filters
+from telegram.ext import Updater, MessageHandler, filters
 
 def auto_reaction(update, context):
     # Define the reaction (emoji, sticker, etc.)

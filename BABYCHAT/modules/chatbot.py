@@ -9,6 +9,78 @@ from config import MONGO_URL
 from BABYCHAT import AMBOT
 from BABYCHAT.modules.helpers import CHATBOT_ON, is_admins
 
+import random
+from pyrogram.enums import ChatAction, MessageReaction
+
+# Define a list of emojis to randomly choose from for reactions
+EMOJI_REACTIONS = ["❤️", "😂", "👍", "🔥", "😎", "😍", "😱", "😢", "😡"]
+
+@AMBOT.on_message(
+    (filters.text | filters.sticker | filters.group) & ~filters.private & ~filters.bot,
+)
+async def chatbot_text(client: Client, message: Message):
+    try:
+        if (
+            message.text.startswith("!")
+            or message.text.startswith("/")
+            or message.text.startswith("?")
+            or message.text.startswith("@")
+            or message.text.startswith("#")
+        ):
+            return
+    except Exception:
+        pass
+    chatdb = MongoClient(MONGO_URL)
+    chatai = chatdb["Word"]["WordDb"]
+
+    if not message.reply_to_message:
+        vickdb = MongoClient(MONGO_URL)
+        vick = vickdb["VickDb"]["Vick"]
+        is_vick = vick.find_one({"chat_id": message.chat.id})
+        if not is_vick:
+            await client.send_chat_action(message.chat.id, ChatAction.TYPING)
+            K = []
+            is_chat = chatai.find({"word": message.text})
+            k = chatai.find_one({"word": message.text})
+            if k:
+                for x in is_chat:
+                    K.append(x["text"])
+                hey = random.choice(K)
+                is_text = chatai.find_one({"text": hey})
+                Yo = is_text["check"]
+                if Yo == "sticker":
+                    await message.reply_sticker(f"{hey}")
+                else:
+                    await message.reply_text(f"{hey}")
+                
+                # Add a random reaction after the reply
+                reaction = random.choice(EMOJI_REACTIONS)
+                await client.send_reaction(message.chat.id, message.id, reaction)
+
+    if message.reply_to_message:
+        vickdb = MongoClient(MONGO_URL)
+        vick = vickdb["VickDb"]["Vick"]
+        is_vick = vick.find_one({"chat_id": message.chat.id})
+        if message.reply_to_message.from_user.id == client.id:
+            if not is_vick:
+                await client.send_chat_action(message.chat.id, ChatAction.TYPING)
+                K = []
+                is_chat = chatai.find({"word": message.text})
+                k = chatai.find_one({"word": message.text})
+                if k:
+                    for x in is_chat:
+                        K.append(x["text"])
+                    hey = random.choice(K)
+                    is_text = chatai.find_one({"text": hey})
+                    Yo = is_text["check"]
+                    if Yo == "sticker":
+                        await message.reply_sticker(f"{hey}")
+                    else:
+                        await message.reply_text(f"{hey}")
+                    
+                    # Add a random reaction after the reply
+                    reaction = random.choice(EMOJI_REACTIONS)
+                    await client.send_reaction(message.chat.id, message.id, reaction)
 
 @AMBOT.on_message(filters.command(["chatbot"]) & filters.group & ~filters.bot)
 @is_admins

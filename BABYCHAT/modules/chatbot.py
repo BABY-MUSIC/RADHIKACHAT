@@ -10,7 +10,7 @@ from BABYCHAT import AMBOT
 from BABYCHAT.modules.helpers import CHATBOT_ON, is_admins
 
 import random
-from pyrogram.enums import ChatAction, MessageReaction
+await client.send_reaction(message.chat.id, message.id, random.choice(EMOJI_REACTIONS))
 
 # Define a list of emojis to randomly choose from for reactions
 EMOJI_REACTIONS = ["❤️", "😂", "👍", "🔥", "😎", "😍", "😱", "😢", "😡"]
